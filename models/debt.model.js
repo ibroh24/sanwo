@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
-export const debtOwner = {
-    debtor = 'debtor',
-    creditor = 'creditor'    
+ const debtOwner = {
+    debtor :'debtor',
+    creditor :'creditor'    
 }
 
 const DebtSchema = new mongoose.Schema({
@@ -13,7 +13,14 @@ const DebtSchema = new mongoose.Schema({
     dateIncurred: {type:Date, required:true},
     dateDue: {type:Date, required:true},
     debtOwner: {type:String, required:true, enum:Object.values(debtOwner)}
-});
+},
+    {timestamps:true}
+);
 
-exports.DebtModel = mongoose.model('Debt', DebtSchema);
+const DebtModel = mongoose.model('Debt', DebtSchema);
+
+module.exports= {
+    debtOwner,
+    DebtModel
+}
 

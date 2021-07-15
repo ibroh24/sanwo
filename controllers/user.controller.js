@@ -2,9 +2,8 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const joi = require('@hapi/joi');
-// const dotEnv = require('dotenv').config();
 const UserModel = require('../models/user.model.js');
-const { findOne } = require('../models/user.model.js');
+
 
 
 const userRegisterSchema = joi.object({

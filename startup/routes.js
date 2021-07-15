@@ -4,6 +4,7 @@ const morgan = require('morgan');
 
 // import routes
 const userRoute = require('../routes/user');
+const debtRoute = require('../routes/debt');
 
 module.exports = (app) =>{
     // setup app config and middleware
@@ -27,6 +28,7 @@ module.exports = (app) =>{
 
     // routes calls
     app.use('/api/user', userRoute);
+    app.use('/api/debt', debtRoute);
 
     // error handlers
     app.use((req, res, next)=>{
