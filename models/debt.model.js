@@ -12,6 +12,7 @@ const DebtSchema = new mongoose.Schema({
     amount: {type:String, required:true},
     dateIncurred: {type:Date, required:true},
     dateDue: {type:Date, required:true},
+    is_settled: {type:Boolean, default:0},
     debtOwner: {type:String, required:true, enum:Object.values(debtOwner)}
 },
     {timestamps:true}

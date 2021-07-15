@@ -50,12 +50,61 @@ module.exports.addDebt = (req, res) =>{
 }
 
 module.exports.findUserDebt = (req, res) =>{
-    DebtModel.find({userId: userId}).then(debt=>{
-        if(!debt){
+    const debtType = req.params.debtType;
+    const debtVal = Object.values(debtOwner);
+    // console.log(debtVal);
+    /*
+    debtVal.forEach(val=>{
+        console.log(val);
+        if(debtType !== val){
+            res.status(400).send({message:"Invalid debt type"});
+        }        
+    });
+    */
+
+    if(!debtType){
+        res.status(400).send({message:"Invalid debt type"});
+    }
+    
+    DebtModel.find({userId: userId, debtOwner: debtType}).then(debt=>{
+        if(!debt && debt != []){
             res.status(404).send({message: "debt cannot be found with user id " + userId})
         }
         res.send({debt, message: "User debt fetched successfully"})
     }).catch(err =>{
         res.status(400).send({message: "error occurred "+err.message});
+    });
+}
+
+module.exports.update = (req, res)=>{
+    const debtId = req.params.debtId;
+    if(!debtId){
+        res.status(400).send({message: "debt id cannot be null"});
+    }
+    const {title, amount, dateIncurred, dateDue, debtOwner} = req.body;
+
+    const { error, value } = validateDebtSchema.validate({
+        title,
+        amount,
+        dateIncurred,
+        dateDue,
+        debtOwner
+    });
+    if(error){
+        return res.status(404).send({
+            message : error.details[0].message
+        });
+    }
+    DebtModel.findByIdAndUpdate(debtId, {
+        title,
+        amount,
+        dateIncurred,
+        dateDue,
+        debtOwner
+    }, {new:true}).then(debt=>{
+        if(!debt){
+            res.status(400).send({message: "debt not found"})
+        }
+        res.send({debt, message: "Debt updated successfully"});
     });
 }
