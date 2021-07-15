@@ -25,7 +25,7 @@ module.exports.addDebt = (req, res) =>{
         debtOwner
     });
     if(error){
-        return res.status(404).send({
+        return res.status(400).send({
             message : error.details[0].message
         });
     }
@@ -52,12 +52,10 @@ module.exports.addDebt = (req, res) =>{
 }
 
 module.exports.findUserDebt = (req, res) =>{
-    // const debtType = req.params.debtType;
-    // const debtVal = Object.values(debtOwner);
     
-    DebtModel.find({userId: userId(res)}).then(debt=>{
+    DebtModel.find({id: userId(res)}).then(debt=>{
         if(!debt && debt != []){
-            res.status(404).send({message: "debt cannot be found with user id " + userId(res)})
+            res.status(400).send({message: "debt cannot be found with user id " + userId(res)})
         }
         res.send({debt, message: "User debt fetched successfully"})
     }).catch(err =>{
@@ -80,7 +78,7 @@ module.exports.update = (req, res)=>{
         debtOwner
     });
     if(error){
-        return res.status(404).send({
+        return res.status(400).send({
             message : error.details[0].message
         });
     }
