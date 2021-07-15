@@ -10,7 +10,9 @@ const validateDebtSchema = joi.object({
     dateDue: joi.date().required(),
     debtOwner: joi.string().required().valid(...Object.values(debtOwner)) 
 });
-const userId = "60f04696c1ff4d2270f5f75d"
+const userId =(res)=>{
+return res.locals.authData.userId
+}
 
 module.exports.addDebt = (req, res) =>{
     const {title, amount, dateIncurred, dateDue, debtOwner} = req.body;
@@ -32,7 +34,7 @@ module.exports.addDebt = (req, res) =>{
         // then save data
         const debt = new DebtModel({
             _id : new mongoose.Types.ObjectId(),
-            userId,
+            userId: userId(res),
             title,
             amount,
             dateIncurred,
@@ -66,9 +68,9 @@ module.exports.findUserDebt = (req, res) =>{
         res.status(400).send({message:"Invalid debt type"});
     }
     
-    DebtModel.find({userId: userId, debtOwner: debtType}).then(debt=>{
+    DebtModel.find({userId: userId(res), debtOwner: debtType}).then(debt=>{
         if(!debt && debt != []){
-            res.status(404).send({message: "debt cannot be found with user id " + userId})
+            res.status(404).send({message: "debt cannot be found with user id " + userId(res)})
         }
         res.send({debt, message: "User debt fetched successfully"})
     }).catch(err =>{
