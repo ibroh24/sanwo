@@ -52,23 +52,10 @@ module.exports.addDebt = (req, res) =>{
 }
 
 module.exports.findUserDebt = (req, res) =>{
-    const debtType = req.params.debtType;
-    const debtVal = Object.values(debtOwner);
-    // console.log(debtVal);
-    /*
-    debtVal.forEach(val=>{
-        console.log(val);
-        if(debtType !== val){
-            res.status(400).send({message:"Invalid debt type"});
-        }        
-    });
-    */
-
-    if(!debtType){
-        res.status(400).send({message:"Invalid debt type"});
-    }
+    // const debtType = req.params.debtType;
+    // const debtVal = Object.values(debtOwner);
     
-    DebtModel.find({userId: userId(res), debtOwner: debtType}).then(debt=>{
+    DebtModel.find({userId: userId(res)}).then(debt=>{
         if(!debt && debt != []){
             res.status(404).send({message: "debt cannot be found with user id " + userId(res)})
         }
