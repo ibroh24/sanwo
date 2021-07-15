@@ -7,6 +7,7 @@ if(process.env.NODE_ENV !== 'production'){ dotEnv.config();}
 
 
 require('./startup/connection.js')();
+require('./startup/routes');
 
 // setting up server
 const port = process.env.PORT || 5000;

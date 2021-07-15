@@ -14,7 +14,6 @@ const UserSchema = new mongoose.Schema({
         match: /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/},
     phone:{type:String, required:true},
     address: String,
-    password: {type:String, required:true},
     isVerify: {type:Boolean, default: 1},
 },
     {timestamps:true}
