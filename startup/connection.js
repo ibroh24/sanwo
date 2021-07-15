@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { exitOnError } = require('winston');
 
 module.exports = async() =>{
     const dbURI = process.env.dbURI;
