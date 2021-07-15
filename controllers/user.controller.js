@@ -2,10 +2,12 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const joi = require('@hapi/joi');
+// const dotEnv = require('dotenv').config();
 const UserModel = require('../models/user.model.js');
+const { findOne } = require('../models/user.model.js');
 
 
-const userValidationSchema = joi.object({
+const userRegisterSchema = joi.object({
     fullname: joi.string().min(3).max(36).required(),
     address: joi.string(),
     phone: joi.string().alphanum().min(11).max(20).required(),
@@ -13,14 +15,19 @@ const userValidationSchema = joi.object({
     password: joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
 });
 
+const userLoginSchema = joi.object({
+    email: joi.string().email({ minDomainSegments: 2 }).required(),
+    password: joi.string().required(),
+});
 
-module.exports.register = async(req, res, next) =>{
+
+module.exports.register = (req, res, next) =>{
     let fullname = req.body.fullname;
     let email = req.body.email;
     let password = req.body.password;
     let phone = req.body.phone;
     let address = req.body.address;
-    const { error, value } = await userValidationSchema.validate({
+    const { error, value } = userRegisterSchema.validate({
         fullname,
         email,
         password,
@@ -49,4 +56,43 @@ module.exports.register = async(req, res, next) =>{
             });
         });
     });
+
+}
+
+module.exports.login = async(req, res) =>{
+    let email = req.body.email;
+    let password = req.body.password;
+    const { error, value } = await userLoginSchema.validate({
+        email,
+        password
+    });
+    if(error){
+        console.log(error);
+        return res.status(404).send({
+            message : error.details[0].message
+        });
+    }
+
+    try{
+        // check if user exists
+        const user = await UserModel.findOne({email});
+        if(user && (await bcrypt.compare(password, user.password))){
+            // then create a token
+            const token = jwt.sign({
+                userId: user._id, email},
+                process.env.jwtSecret,
+                {
+                    expiresIn: "4h"
+                }
+            );
+
+            res.status(200).send({
+                user, token});
+        }
+        res.status(400).send("Invalid Credentials");
+    }catch(er){
+        res.status(500).send({
+            message: er.message || "some error occurred"
+        });
+    }
 }

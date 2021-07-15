@@ -1,3 +1,6 @@
 # .env
 
 dbURI="mongodb://localhost:27017/sanwo"
+
+jwtSecret="secret"
+
