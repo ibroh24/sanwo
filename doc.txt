@@ -3,6 +3,7 @@ user tb{
     email,
     phone,
     address,
+    password,
     isVerify
 
 }
