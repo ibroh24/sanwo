@@ -1,1 +1,1 @@
-Sawon Debt management app develop with nodejs, mongoose
+Sawo Debt management app develop with nodejs, mongoose
