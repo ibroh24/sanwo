@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { exitOnError } = require('winston');
 
 module.exports = async() =>{
     const dbURI = process.env.dbURI;
@@ -10,5 +11,6 @@ module.exports = async() =>{
         console.log('db connection established successfully...');
     } catch (e) {
         console.log("error"+ e.message);
+        throw Error(e);
     }
 }
